@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import Hero from "./components/Hero";
 import Uploader from "./components/Uploader";
 import EditorControls from "./components/EditorControls";
 import PreviewPicker from "./components/PreviewPicker";
@@ -11,7 +10,7 @@ function App() {
   const [selectedPreview, setSelectedPreview] = useState(null);
 
   const handleAddFiles = (incoming) => {
-    // Merge and de-duplicate by name+size for UX
+    // Merge e deduplica per name+size
     const map = new Map();
     [...files, ...incoming].forEach((f) => map.set(`${f.name}-${f.size}`, f));
     setFiles(Array.from(map.values()));
@@ -24,18 +23,15 @@ function App() {
   const handleClear = () => setFiles([]);
 
   const generatePreviews = ({ targetLength, aspect, preset, censor }) => {
-    // Mock preview generation using local object URLs for the first videos
+    // Mock: genera fino a 6 anteprime da file video caricati o placeholder neri
     const videoFiles = files.filter((f) => f.type.startsWith("video"));
-    const limit = Math.min(6, videoFiles.length || 6);
-
-    // If not enough videos uploaded, create dummy black videos via data URI as placeholders
     const generated = [];
-    for (let i = 0; i < limit; i++) {
+
+    for (let i = 0; i < 6; i++) {
       const f = videoFiles[i];
       if (f) generated.push(URL.createObjectURL(f));
       else generated.push("");
     }
-    while (generated.length < 6) generated.push("");
 
     setPreviews(generated);
     setSelectedPreview(null);
@@ -50,9 +46,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      <Hero />
+      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur">
+        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+          <div className="text-xl font-semibold text-slate-900">AI Video Studio</div>
+          <div className="text-xs text-slate-600">Ottimizzato per YouTube • 16:9 · 9:16 · 1:1</div>
+        </div>
+      </header>
 
-      <main className="mx-auto max-w-7xl px-6 -mt-10 pb-24">
+      <main className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
             <Uploader
