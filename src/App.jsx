@@ -1,16 +1,11 @@
 import { useMemo, useState } from "react";
 import Uploader from "./components/Uploader";
-import EditorControls from "./components/EditorControls";
-import PreviewPicker from "./components/PreviewPicker";
-import AIChat from "./components/AIChat";
+import MainEditor from "./components/MainEditor";
 import RealHighlightsExtractor from "./components/RealHighlightsExtractor";
 import CoverGenerator from "./components/CoverGenerator";
-import UnclearSpeechSubtitler from "./components/UnclearSpeechSubtitler";
 
 function App() {
   const [files, setFiles] = useState([]);
-  const [previews, setPreviews] = useState([]);
-  const [selectedPreview, setSelectedPreview] = useState(null);
 
   const handleAddFiles = (incoming) => {
     const map = new Map();
@@ -24,53 +19,23 @@ function App() {
 
   const handleClear = () => setFiles([]);
 
-  const generatePreviews = ({ targetLength, aspect, preset, censor }) => {
-    const videoFiles = files.filter((f) => f.type.startsWith("video"));
-    const generated = [];
-
-    for (let i = 0; i < 6; i++) {
-      const f = videoFiles[i];
-      if (f) generated.push(URL.createObjectURL(f));
-      else generated.push("");
-    }
-
-    setPreviews(generated);
-    setSelectedPreview(null);
-  };
-
-  const restart = () => {
-    setSelectedPreview(null);
-    setPreviews([]);
-  };
-
-  const hasSelection = useMemo(() => selectedPreview !== null, [selectedPreview]);
+  const videoCount = useMemo(() => files.filter((f) => f.type.startsWith("video")).length, [files]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <div className="text-xl font-semibold text-slate-900">AI Video Studio</div>
-          <div className="text-xs text-slate-600">Ottimizzato per YouTube • 16:9 · 9:16 · 1:1</div>
+          <div className="text-xs text-slate-600">Editor intelligente: tagli, effetti, sottotitoli, 6 versioni</div>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
-            <Uploader
-              files={files}
-              onAddFiles={handleAddFiles}
-              onRemoveFile={handleRemoveFile}
-              onClear={handleClear}
-            />
-            <EditorControls onSubmit={generatePreviews} />
-            <PreviewPicker
-              previews={previews}
-              onRestart={restart}
-              onSelect={(idx) => setSelectedPreview(idx)}
-            />
+            <Uploader files={files} onAddFiles={handleAddFiles} onRemoveFile={handleRemoveFile} onClear={handleClear} />
+            <MainEditor files={files} />
             <RealHighlightsExtractor />
-            <UnclearSpeechSubtitler />
             <CoverGenerator />
           </div>
           <div className="space-y-6">
@@ -78,13 +43,10 @@ function App() {
               <h3 className="mb-2 text-lg font-semibold text-slate-800">Stato</h3>
               <ul className="text-sm text-slate-700 space-y-1">
                 <li>File caricati: {files.length}</li>
-                <li>Anteprime generate: {previews.filter(Boolean).length}/6</li>
-                <li>
-                  Selezione: {hasSelection ? `Anteprima #${(selectedPreview ?? 0) + 1}` : "Nessuna"}
-                </li>
+                <li>Video: {videoCount}</li>
+                <li>Suggerimento: genera le 6 versioni con un click dall'editor.</li>
               </ul>
             </div>
-            <AIChat onUpload={handleAddFiles} />
           </div>
         </div>
       </main>
