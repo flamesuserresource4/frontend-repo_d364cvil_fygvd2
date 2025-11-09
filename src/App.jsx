@@ -3,7 +3,8 @@ import Uploader from "./components/Uploader";
 import EditorControls from "./components/EditorControls";
 import PreviewPicker from "./components/PreviewPicker";
 import AIChat from "./components/AIChat";
-import HighlightsExtractor from "./components/HighlightsExtractor";
+import RealHighlightsExtractor from "./components/RealHighlightsExtractor";
+import CoverGenerator from "./components/CoverGenerator";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -11,7 +12,6 @@ function App() {
   const [selectedPreview, setSelectedPreview] = useState(null);
 
   const handleAddFiles = (incoming) => {
-    // Merge e deduplica per name+size
     const map = new Map();
     [...files, ...incoming].forEach((f) => map.set(`${f.name}-${f.size}`, f));
     setFiles(Array.from(map.values()));
@@ -24,7 +24,6 @@ function App() {
   const handleClear = () => setFiles([]);
 
   const generatePreviews = ({ targetLength, aspect, preset, censor }) => {
-    // Mock: genera fino a 6 anteprime da file video caricati o placeholder neri
     const videoFiles = files.filter((f) => f.type.startsWith("video"));
     const generated = [];
 
@@ -69,8 +68,8 @@ function App() {
               onRestart={restart}
               onSelect={(idx) => setSelectedPreview(idx)}
             />
-            {/* Nuova funzionalità: estrazione highlight da un video già montato */}
-            <HighlightsExtractor />
+            <RealHighlightsExtractor />
+            <CoverGenerator />
           </div>
           <div className="space-y-6">
             <div className="rounded-xl border border-slate-200 bg-white/60 p-4 shadow-sm backdrop-blur">
