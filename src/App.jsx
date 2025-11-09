@@ -3,6 +3,7 @@ import Uploader from "./components/Uploader";
 import EditorControls from "./components/EditorControls";
 import PreviewPicker from "./components/PreviewPicker";
 import AIChat from "./components/AIChat";
+import HighlightsExtractor from "./components/HighlightsExtractor";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -68,6 +69,8 @@ function App() {
               onRestart={restart}
               onSelect={(idx) => setSelectedPreview(idx)}
             />
+            {/* Nuova funzionalità: estrazione highlight da un video già montato */}
+            <HighlightsExtractor />
           </div>
           <div className="space-y-6">
             <div className="rounded-xl border border-slate-200 bg-white/60 p-4 shadow-sm backdrop-blur">
