@@ -5,6 +5,7 @@ import PreviewPicker from "./components/PreviewPicker";
 import AIChat from "./components/AIChat";
 import RealHighlightsExtractor from "./components/RealHighlightsExtractor";
 import CoverGenerator from "./components/CoverGenerator";
+import UnclearSpeechSubtitler from "./components/UnclearSpeechSubtitler";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -69,6 +70,7 @@ function App() {
               onSelect={(idx) => setSelectedPreview(idx)}
             />
             <RealHighlightsExtractor />
+            <UnclearSpeechSubtitler />
             <CoverGenerator />
           </div>
           <div className="space-y-6">
